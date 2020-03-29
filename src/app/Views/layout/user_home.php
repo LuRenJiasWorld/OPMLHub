@@ -89,6 +89,15 @@
         left: 260px !important;
     }
 
+    /* 鼠标悬浮样式美化 */
+    .layui-nav-tree .layui-nav-item > a:hover, .layui-nav-tree .layui-nav-item dd:hover {
+        background-color: #159688 !important;
+    }
+
+    span.layui-nav-bar {
+        display: none !important;
+    }
+
     .required {
         color: red;
     }
@@ -114,7 +123,7 @@
             <ul class="layui-nav layui-nav-tree">
                 <?php foreach ($opml as $eachOPML):?>
                     <li class="layui-nav-item layui-nav-itemed">
-                        <a class="opml-title" title="<?= $eachOPML["opml"]["title"] ?>" href="javascript:;">
+                        <a class="opml-title <?php if(isset($currentData) && $currentData["uuid"] == $eachOPML["opml"]["uuid"]) echo "layui-this"; ?>" title="<?= $eachOPML["opml"]["title"] ?>" href="javascript:;">
                             <i class="layui-icon layui-icon-template-1" style="margin-right: 10px; transform: translateY(-1px);"></i>
                             <span data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>">
                                 <?= $eachOPML["opml"]["title"] ?>
@@ -123,7 +132,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <?php foreach ($eachOPML["rss"] as $eachRSS):?>
-                            <dd>
+                            <dd class="<?php if(isset($currentData) && $currentData["uuid"] == $eachRSS["uuid"]) echo "layui-this"; ?>">
                                 <a class="rss-list-item" title="<?= $eachRSS["feed_name"] ?>" data-rss-uuid="<?= $eachRSS["uuid"] ?>" href="javascript:;">
                                     <i class="layui-icon layui-icon-rss"></i>
                                     <?= $eachRSS["feed_name"] ?>
