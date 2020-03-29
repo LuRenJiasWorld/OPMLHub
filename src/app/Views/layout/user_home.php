@@ -166,7 +166,6 @@
     </div>
 
     <div id="opml-share" style="display: none;">
-        <span style="display: block; text-align: center; margin-bottom: 10px; color: #1170b7;">点击确定复制到剪贴板</span>
         <form class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label">OPML链接</label>
@@ -211,13 +210,19 @@
             layer.open({
                 type: 0,
                 offset: 'auto',
-                area: '500px',
+                area: '700px',
                 content: $("#opml-share").html(),
+                btn: ["复制到剪贴板", "在新标签页打开"],
                 success: function() {
                     $(".layui-layer-content input").val(location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + "opml?uuid=" + event.currentTarget.dataset.opmlUuid);
                 },
                 yes: function() {
                     Clipboard.copy($(".layui-layer-content input").val());
+                    layer.msg("复制成功！");
+                },
+                btn2: function() {
+                    window.open($(".layui-layer-content input").val());
+                    return false
                 }
             });
         });
