@@ -189,6 +189,15 @@
         var layer = layui.layer;
         var $ = layui.jquery;
 
+        function inUrlParameters(key, value) {
+            return window.location.search.substr(1).split("&").includes(key + "=" + value);
+        }
+
+        $(window).ready(function () {
+            if (inUrlParameters("module", "index"))    $("#tab-index").addClass("layui-this");
+            if (inUrlParameters("module", "settings")) $("#tab-settings").addClass("layui-this");
+        });
+
         $(".opml-title span").click(function (event) {
             event.stopPropagation();
             console.log("open settings panel for " + event.currentTarget.dataset.opmlUuid);
