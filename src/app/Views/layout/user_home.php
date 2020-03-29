@@ -199,13 +199,11 @@
 
         $(".opml-title span").click(function (event) {
             event.stopPropagation();
-            console.log("open settings panel for " + event.currentTarget.dataset.opmlUuid);
             location.href = "/user/home?module=index&page=opml&uuid=" + event.currentTarget.dataset.opmlUuid;
         });
 
         $(".opml-title i").click(function (event) {
             event.stopPropagation();
-            console.log("display opml link for " + event.currentTarget.dataset.opmlUuid);
 
             layer.open({
                 type: 0,
@@ -229,18 +227,14 @@
 
         $(".rss-list-item").click(function (event) {
             event.stopPropagation();
-            console.log("open settings panel for " + event.currentTarget.dataset.rssUuid);
             location.href = "/user/home?module=index&page=rss&uuid=" + event.currentTarget.dataset.rssUuid;
         });
 
         $(".delete-rss").click(function (event) {
             event.stopPropagation();
-            console.log("delete rss for " + event.currentTarget.dataset.rssUuid);
             layer.confirm("确定要删除吗？", {btn: ["确定", "取消"]}, function () {
                 location.href = "/opml/delete?type=rss&uuid=" + event.currentTarget.dataset.rssUuid;
-            }, function () {
-
-            })
+            });
         });
 
         $("#button-delete-opml").click(function (event) {
@@ -248,8 +242,6 @@
             event.stopPropagation();
             layer.confirm("确定要删除吗？", {btn: ["确定", "取消"]}, function () {
                 location.href = "/opml/delete?type=opml&uuid=" + event.currentTarget.dataset.opmlUuid;
-            }, function () {
-
             });
         });
 
