@@ -32,21 +32,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label">RSS备注</label>
             <div class="layui-input-block">
-                <input type="text" name="feed_comment" value="<?= isset($currentData["feed_comment"]) ? $currentData["feed_comment"] : "" ?>" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="feed_comment" value="<?= isset($currentData["feed_comment"]) ? $currentData["feed_comment"] : "" ?>" placeholder="请输入RSS备注" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">RSS地址<i class="required">*</i></label>
             <div class="layui-input-block">
-                <input type="text" name="feed_url" required lay-verify="required" value="<?= isset($currentData["feed_url"]) ? $currentData["feed_url"] : "" ?>" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="feed_url" required lay-verify="required" value="<?= isset($currentData["feed_url"]) ? $currentData["feed_url"] : "" ?>" placeholder="请输入RSS订阅地址" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">站点地址</label>
             <div class="layui-input-block">
-                <input type="text" name="website_url" value="<?= isset($currentData["website_url"]) ? $currentData["website_url"] : "" ?>" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="website_url" value="<?= isset($currentData["website_url"]) ? $currentData["website_url"] : "" ?>" placeholder="请输入站点地址" autocomplete="off" class="layui-input">
             </div>
         </div>
 
