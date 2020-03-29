@@ -110,8 +110,8 @@
         <div class="layui-logo"><a href="/">OPMLHub</a></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-rss"></i>订阅配置</a></li>
-            <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-slider"></i>高级设置</a></li>
+            <li class="layui-nav-item" id="tab-index"><a href="/user/home?module=index&page=index"><i class="layui-icon layui-icon-rss"></i>订阅配置</a></li>
+            <li class="layui-nav-item" id="tab-settings"><a href="/user/home?module=settings&page=index"><i class="layui-icon layui-icon-slider"></i>高级设置</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item"><a href="/user/logout">修改密码</a></li>
