@@ -107,9 +107,11 @@ class User extends BaseController {
                 case "settings":
                     return view("user/settings", $renderData);
                     break;
-                case "changePassword":
-                    return view("user/password", $renderData);
+                case "password":
+                    return view("user/change_password", $renderData);
                     break;
+                default:
+                    goto FAIL;
             }
         } else {
             FAIL:
