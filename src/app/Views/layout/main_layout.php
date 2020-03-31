@@ -10,6 +10,7 @@
     <style>
         html, body {
             margin: 0;
+            font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei" !important;
         }
     </style>
 
