@@ -21,6 +21,14 @@ class User extends BaseController {
 
                 $session->set("user", $userInfo);
 
+                // 更新登录信息
+                $loginInfo = [
+                    "login_time"    =>      date("Y-m-d H:i:s", time()),
+                    "login_ip"      =>      $request->getIPAddress()
+                ];
+
+                $this->updateCurrentUserLoginHistory($loginInfo);
+
                 return redirect()->to("/user/home");
             } else {
                 $renderData["error"] = "请输入正确的邮箱和密码！";
@@ -162,5 +170,27 @@ class User extends BaseController {
 
     protected function RegisterUser($username, $password) {
 
+    }
+
+    private function updateCurrentUserLoginHistory($currentHistory) {
+        $db = \Config\Database::connect();
+
+        $builder = $db->table("user");
+
+        $userInfo = self::getCurrentUserInfo();
+
+        $loginHistory = json_decode($userInfo["login_history"], true);
+
+        if ($loginHistory) {
+            $loginHistory = array_merge($loginHistory, [$currentHistory]);
+        } else {
+            $loginHistory = [$currentHistory];
+        }
+
+        $builder->where([
+            "id"            =>      $userInfo["id"]
+        ])->update([
+            "login_history" =>      json_encode($loginHistory, JSON_UNESCAPED_UNICODE)
+        ]);
     }
 }
