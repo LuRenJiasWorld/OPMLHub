@@ -247,7 +247,7 @@
                 content: $("#opml-share").html(),
                 btn: ["复制到剪贴板", "在新标签页打开"],
                 success: function() {
-                    $(".layui-layer-content input").val(location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + "opml?uuid=" + event.currentTarget.dataset.opmlUuid);
+                    $(".layui-layer-content input").val(location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + "opml/" + event.currentTarget.dataset.opmlUuid);
                 },
                 yes: function() {
                     Clipboard.copy($(".layui-layer-content input").val());
