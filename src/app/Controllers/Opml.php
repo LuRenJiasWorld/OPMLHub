@@ -6,24 +6,21 @@ use Overtrue\Pinyin\Pinyin;
 class Opml extends BaseController
 {
     // 获取OPML数据
-    public function index() {
-        $request = \Config\Services::request();
-        $getData = $request->getGet();
-
-        if (isset($getData["uuid"]) && self::getOPMLInfo($getData["uuid"])) {
+    public function DisplayOPML($uuid) {
+        if (isset($uuid) && self::_getOPMLInfo($uuid)) {
             // OPML格式为XML
             $this->response->setHeader("Content-Type", "application/xml; charset=utf-8");
 
-            $opmlInfo = self::getOPMLInfo($getData["uuid"]);
-            $userInfo = User::getUserInfo("id", $opmlInfo["uid"]);
+            $opmlInfo = self::_getOPMLInfo($uuid);
+            $userInfo = User::_getUserInfo("id", $opmlInfo["uid"]);
 
 
             $rssInfo = [];
 
-            $allOPMLinfo = self::getAllOPML($userInfo["id"]);
+            $allOPMLinfo = self::_getAllOPML($userInfo["id"]);
 
             foreach ($allOPMLinfo as $eachOPML) {
-                if ($eachOPML["opml"]["uuid"] == $getData["uuid"]) {
+                if ($eachOPML["opml"]["uuid"] == $uuid) {
                     $rssInfo = $eachOPML["rss"];
                     break;
                 }
@@ -50,7 +47,7 @@ class Opml extends BaseController
     }
 
     // 更新(新增)OPML/RSS记录
-    public function update() {
+    public function Update() {
         if (!parent::loginChecker()) return redirect()->to("/user/login");
 
         $request = \Config\Services::request();
@@ -62,31 +59,31 @@ class Opml extends BaseController
                 case "opml":
                     if (isset($getData["uuid"])) {
                         // 检查UUID是否属于当前用户
-                        if (self::getOPMLInfo($getData["uuid"])["uid"] != User::getCurrentUserInfo()["id"]) goto FAIL;
+                        if (self::_getOPMLInfo($getData["uuid"])["uid"] != User::_getCurrentUserInfo()["id"]) goto FAIL;
 
                         // 更新数据
                         if (!(isset($postData["title"]))) goto FAIL;
-                        self::updateOPMLInfo($getData["uuid"], User::getCurrentUserInfo()["id"], esc($postData["title"]), true);
+                        self::_updateOPMLInfo($getData["uuid"], User::_getCurrentUserInfo()["id"], esc($postData["title"]), true);
                     } else {
                         // 插入数据
                         if (!(isset($postData["title"]))) goto FAIL;
 
                         $uuid = Uuid::uuid4();
-                        self::insertOPMLInfo($uuid->toString(), User::getCurrentUserInfo()["id"], esc($postData["title"]));
+                        self::_insertOPMLInfo($uuid->toString(), User::_getCurrentUserInfo()["id"], esc($postData["title"]));
                     }
 
                     return redirect()->back()->withInput();
                 case "rss":
                     if(isset($getData["uuid"])) {
                         // 检查UUID是否属于当前用户
-                        if (self::getOPMLInfo(self::getRSSInfo($getData["uuid"])["opml_uuid"])["uid"] != User::getCurrentUserInfo()["id"]) goto FAIL;
+                        if (self::_getOPMLInfo(self::_getRSSInfo($getData["uuid"])["opml_uuid"])["uid"] != User::_getCurrentUserInfo()["id"]) goto FAIL;
 
                         if (!(isset($postData["opml_uuid"]) && isset($postData["feed_name"]) && isset($postData["feed_comment"])
                             && isset($postData["feed_url"]) && isset($postData["website_url"]))) {
                             goto FAIL;
                         }
                         // 更新数据
-                        self::updateRSSInfo($getData["uuid"], esc($postData["opml_uuid"]), esc($postData["feed_name"]),
+                        self::_updateRSSInfo($getData["uuid"], esc($postData["opml_uuid"]), esc($postData["feed_name"]),
                             esc($postData["feed_comment"]), esc($postData["feed_url"]), esc($postData["website_url"]), true);
                     } else {
                         // 插入数据
@@ -94,7 +91,7 @@ class Opml extends BaseController
                             && isset($postData["feed_url"]) && isset($postData["website_url"]))) goto FAIL;
 
                         $uuid = Uuid::uuid4();
-                        self::insertRSSInfo($uuid->toString(), $postData["opml_uuid"], esc($postData["feed_name"]), esc($postData["feed_comment"]),
+                        self::_insertRSSInfo($uuid->toString(), $postData["opml_uuid"], esc($postData["feed_name"]), esc($postData["feed_comment"]),
                             esc($postData["feed_url"]), esc($postData["website_url"]));
                     }
 
@@ -108,7 +105,7 @@ class Opml extends BaseController
     }
 
     // 删除OPML/RSS记录
-    public function delete() {
+    public function Delete() {
         if (!parent::loginChecker()) return redirect()->to("/user/login");
 
         $request = \Config\Services::request();
@@ -117,9 +114,9 @@ class Opml extends BaseController
         if (isset($getData["type"]) && $getData["uuid"] && $request->getMethod() == "get") {
             switch($getData["type"]) {
                 case "opml":
-                    $opmlInfo = self::getOPMLInfo($getData["uuid"]);
-                    if ($opmlInfo && $opmlInfo["uid"] == User::getCurrentUserInfo()["id"]) {
-                        self::updateOPMLInfo($getData["uuid"], User::getCurrentUserInfo()["id"], $opmlInfo["title"], false);
+                    $opmlInfo = self::_getOPMLInfo($getData["uuid"]);
+                    if ($opmlInfo && $opmlInfo["uid"] == User::_getCurrentUserInfo()["id"]) {
+                        self::_updateOPMLInfo($getData["uuid"], User::_getCurrentUserInfo()["id"], $opmlInfo["title"], false);
                     } else {
                         goto FAIL;
                     }
@@ -128,9 +125,9 @@ class Opml extends BaseController
                     return redirect()->to("/user/home");
 
                 case "rss":
-                    $rssInfo = self::getRSSInfo($getData["uuid"]);
-                    if ($rssInfo && self::getOPMLInfo($rssInfo["opml_uuid"])["uid"] == User::getCurrentUserInfo()["id"]) {
-                        self::updateRSSInfo($rssInfo["uuid"], $rssInfo["opml_uuid"], $rssInfo["feed_name"], $rssInfo["feed_comment"],
+                    $rssInfo = self::_getRSSInfo($getData["uuid"]);
+                    if ($rssInfo && self::_getOPMLInfo($rssInfo["opml_uuid"])["uid"] == User::_getCurrentUserInfo()["id"]) {
+                        self::_updateRSSInfo($rssInfo["uuid"], $rssInfo["opml_uuid"], $rssInfo["feed_name"], $rssInfo["feed_comment"],
                             $rssInfo["feed_url"], $rssInfo["website_url"], false);
                     } else {
                         goto FAIL;
@@ -148,7 +145,7 @@ class Opml extends BaseController
 
     // 根据UID获取用户所有（已启用）的OPML和RSS信息
     // 按照拼音排序
-    public static function getAllOPML($uid) {
+    public static function _getAllOPML($uid) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("opml");
@@ -213,7 +210,7 @@ class Opml extends BaseController
         return $resultList;
     }
 
-    public static function getOPMLInfo($uuid) {
+    public static function _getOPMLInfo($uuid) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("opml");
@@ -230,7 +227,7 @@ class Opml extends BaseController
         }
     }
 
-    public static function updateOPMLInfo($uuid, $uid, $title, $enabled) {
+    public static function _updateOPMLInfo($uuid, $uid, $title, $enabled) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("opml");
@@ -244,7 +241,7 @@ class Opml extends BaseController
         ]);
     }
 
-    public static function insertOPMLInfo($uuid, $uid, $title) {
+    public static function _insertOPMLInfo($uuid, $uid, $title) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("opml");
@@ -256,7 +253,7 @@ class Opml extends BaseController
         ]);
     }
 
-    public static function getRSSInfo($uuid) {
+    public static function _getRSSInfo($uuid) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("rss");
@@ -274,7 +271,7 @@ class Opml extends BaseController
         }
     }
 
-    public static function updateRSSInfo($uuid, $opml_uuid, $feed_name, $feed_comment, $feed_url, $website_url, $enabled) {
+    public static function _updateRSSInfo($uuid, $opml_uuid, $feed_name, $feed_comment, $feed_url, $website_url, $enabled) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("rss");
@@ -291,7 +288,7 @@ class Opml extends BaseController
         ]);
     }
 
-    public static function insertRSSInfo($uuid, $opml_uuid, $feed_name, $feed_comment, $feed_url, $website_url) {
+    public static function _insertRSSInfo($uuid, $opml_uuid, $feed_name, $feed_comment, $feed_url, $website_url) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("rss");

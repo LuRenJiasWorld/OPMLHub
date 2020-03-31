@@ -1,7 +1,7 @@
 <?php namespace App\Controllers;
 
 class User extends BaseController {
-    public function login() {
+    public function Login() {
         if (parent::loginChecker()) return redirect()->to("/user/home");
 
         $request = \Config\Services::request();
@@ -15,9 +15,9 @@ class User extends BaseController {
         } else {
             $postData = $request->getPost();
 
-            if (isset($postData["email"]) && isset($postData["password"]) && $this->authorizeUser($postData["email"], $postData["password"])) {
+            if (isset($postData["email"]) && isset($postData["password"]) && $this->_authorizeUser($postData["email"], $postData["password"])) {
                 $session = \Config\Services::session();
-                $userInfo = $this->getUserInfo("email", $postData["email"]);
+                $userInfo = $this->_getUserInfo("email", $postData["email"]);
 
                 $session->set("user", $userInfo);
 
@@ -27,7 +27,7 @@ class User extends BaseController {
                     "login_ip"      =>      $request->getIPAddress()
                 ];
 
-                $this->updateCurrentUserLoginHistory($loginInfo);
+                $this->_updateCurrentUserLoginHistory($loginInfo);
 
                 return redirect()->to("/user/home");
             } else {
@@ -37,7 +37,7 @@ class User extends BaseController {
         }
     }
 
-    public function logout() {
+    public function Logout() {
         if (!parent::loginChecker()) return redirect()->to("/user/login");
 
         $session = \Config\Services::session();
@@ -46,21 +46,21 @@ class User extends BaseController {
         return redirect()->to("/");
     }
 
-    public function register() {
+    public function Register() {
         $renderData = [
             "PageTitle"     =>      "OPMLHub - 注册"
         ];
         return view("user/register", $renderData);
     }
 
-    public function reset() {
+    public function Reset() {
         $renderData = [
             "PageTitle"     =>      "OPMLHub - 重置密码"
         ];
         return view("user/reset", $renderData);
     }
 
-    public function home() {
+    public function Home() {
         if (!parent::loginChecker()) return redirect()->to("/user/login");
 
         $renderData = [
@@ -72,7 +72,7 @@ class User extends BaseController {
 
         if (isset($getData["module"]) && isset($getData["page"])) {
             // 读取当前用户的所有OPML和RSS
-            $allOPML = Opml::getAllOPML(self::getCurrentUserInfo()["id"]);
+            $allOPML = Opml::_getAllOPML(self::_getCurrentUserInfo()["id"]);
 
             $renderData["opml"] = $allOPML;
 
@@ -87,7 +87,7 @@ class User extends BaseController {
                             break;
                         case "opml":
                             if (isset($getData["uuid"])) {
-                                $renderData["currentData"] = Opml::getOPMLInfo($getData["uuid"]);
+                                $renderData["currentData"] = Opml::_getOPMLInfo($getData["uuid"]);
 
                                 if ($renderData["currentData"]["enabled"] == false) goto FAIL;
                                 else return view("user/opml_config", $renderData);
@@ -98,7 +98,7 @@ class User extends BaseController {
                             break;
                         case "rss":
                             if (isset($getData["uuid"])) {
-                                $renderData["currentData"] = Opml::getRSSInfo($getData["uuid"]);
+                                $renderData["currentData"] = Opml::_getRSSInfo($getData["uuid"]);
                                 return view("user/rss_config", $renderData);
                             } else {
                                 // 新建RSS页面
@@ -127,7 +127,7 @@ class User extends BaseController {
         }
     }
 
-    protected function authorizeUser($email, $password) {
+    private function _authorizeUser($email, $password) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("user");
@@ -144,7 +144,7 @@ class User extends BaseController {
         }
     }
 
-    public static function getUserInfo($type, $value) {
+    public static function _getUserInfo($type, $value) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("user");
@@ -161,23 +161,23 @@ class User extends BaseController {
         }
     }
 
-    public static function getCurrentUserInfo() {
+    public static function _getCurrentUserInfo() {
         $session = \Config\Services::session();
         $user = $session->get("user");
 
         return $user;
     }
 
-    protected function RegisterUser($username, $password) {
+    private function _registerUser($username, $password) {
 
     }
 
-    private function updateCurrentUserLoginHistory($currentHistory) {
+    private function _updateCurrentUserLoginHistory($currentHistory) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("user");
 
-        $userInfo = self::getCurrentUserInfo();
+        $userInfo = self::_getCurrentUserInfo();
 
         $loginHistory = json_decode($userInfo["login_history"], true);
 
