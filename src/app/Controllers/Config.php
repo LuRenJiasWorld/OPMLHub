@@ -1,8 +1,8 @@
 <?php namespace App\Controllers;
 
 class Config extends BaseController {
-    public static $SMTP_Host = "";
-    public static $SMTP_Port = "";
+    public static $APP_ContactEmail = "";
+
     public static $SMTP_Encryption = "";
     public static $SMTP_User = "";
     public static $SMTP_Pass = "";
