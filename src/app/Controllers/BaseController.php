@@ -78,6 +78,7 @@ class BaseController extends Controller
             $mail->Password   = Config::$SMTP_Pass;
             $mail->SMTPSecure = Config::$SMTP_Encryption == "tls" ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = Config::$SMTP_Port;
+            $mail->CharSet    = PHPMailer::CHARSET_UTF8;
 
             $mail->setFrom(Config::$SMTP_User, Config::$SMTP_Name);
             $mail->addAddress($to);
