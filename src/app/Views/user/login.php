@@ -6,14 +6,14 @@
         <div class="layui-form-item form-input">
             <label class="layui-form-label login">邮箱</label>
             <div class="layui-input-block login">
-                <input type="email" name="email" required  lay-verify="required" placeholder="请输入电子邮箱地址" class="layui-input">
+                <input type="email" name="email" required lay-verify="required" placeholder="请输入电子邮箱地址" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item form-input">
             <label class="layui-form-label login">密码</label>
             <div class="layui-input-block login">
-                <input type="password" name="password" required  lay-verify="required" class="layui-input">
+                <input type="password" name="password" minlength="6" maxlength="16" required lay-verify="required" class="layui-input">
             </div>
         </div>
 
@@ -28,7 +28,6 @@
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-fluid" onclick="location.href='/user/register'">注册</button>
             </div>
         </div>
-
         <a class="form-link" href="/user/reset">登录遇到问题？</a>
     </form>
 
