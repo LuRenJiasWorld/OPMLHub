@@ -1,11 +1,11 @@
 <?php
-/*    echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";*/
+    if (isset($XMLHeader)) echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
 ?>
 
 <opml version="1.0">
     <head>
         <title><?= $OpmlTitle ?></title>
-        <ownerEmail><?= $UserEmail ?></ownerEmail>
+        <?php if (isset($UserEmail)) echo "<ownerEmail>$UserEmail</ownerEmail>"; ?>
     </head>
     <body>
         <?php foreach ($OpmlData as $eachRSS):?>
