@@ -44,6 +44,11 @@ class Opml extends BaseController
             if ($userOptions["email_in_opml"]) $renderData["UserEmail"] = $userInfo["email"];
             if ($userOptions["xml_header"])    $renderData["XMLHeader"] = true;
 
+
+            // 记录日志
+            $request = \Config\Services::request();
+            self::_logAccessInfo($uuid, $request->getIPAddress());
+
             return view("opml/opml", $renderData);
         } else {
             return redirect()->to("/user/login");
@@ -313,4 +318,69 @@ class Opml extends BaseController
             "website_url"   =>      $website_url
         ]);
     }
+
+    private static function _logAccessInfo($opml_uuid, $access_ip) {
+        $db = \Config\Database::connect();
+
+        $builder = $db->table("opml_access_history");
+
+        $builder->insert([
+            "opml_uuid"     =>      $opml_uuid,
+            "access_ip"     =>      $access_ip
+        ]);
+    }
+
+    public static function _getOPMLRSSStatistic($uid) {
+        $data = Opml::_getAllOPML($uid);
+
+        $returnData["opml_count"] = count($data);
+        $returnData["rss_count"]  = 0;
+
+        foreach ($data as $each) {
+            $returnData["rss_count"] += count($each["rss"]);
+        }
+
+        return $returnData;
+    }
+
+    public static function _getOPMLAccessHistory($uid) {
+        $allOPML = self::_getAllOPML($uid);
+
+        $uuidList = [];
+
+        foreach ($allOPML as $each) {
+            $uuidList = array_merge($uuidList, [$each["opml"]["uuid"]]);
+        }
+
+        $returnData["access_count"] = 0;
+        $returnData["access_history"] = [0, 0, 0, 0, 0, 0, 0];
+
+        $db = \Config\Database::connect();
+        $builder = $db->table("opml_access_history");
+
+        $result = $builder->whereIn("opml_uuid", $uuidList)->orderBy("access_time", "asc")->get()->getResult("array");
+
+        // 计数
+        if (count($result) !== 0) {
+            $returnData["access_count"] = count($result);
+        }
+
+        // 统计每日历史
+        $last7Days = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = "-" . (6 - $i) . "days";
+            $last7Days = array_merge($last7Days, [date('Y-m-d', strtotime($day))]);
+        }
+
+        foreach ($result as $each) {
+            foreach ($last7Days as $id => $eachDay) {
+                if (strstr($each["access_time"], $eachDay)) {
+                    $returnData["access_history"][$id] += 1;
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
 }

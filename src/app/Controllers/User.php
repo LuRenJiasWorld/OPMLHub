@@ -1,5 +1,7 @@
 <?php namespace App\Controllers;
 
+use Zhuzhichao\IpLocationZh\Ip;
+
 class User extends BaseController {
     public function Login() {
         if (parent::loginChecker()) return redirect()->to("/user/home");
@@ -31,7 +33,7 @@ class User extends BaseController {
 
                 return redirect()->to("/user/home");
             } else {
-                return redirect()->to("/user/login?notify=error&message=请输入正确的邮箱和密码!");
+                return redirect()->to("/user/login?notify=error&message=" . urlencode("请输入正确的邮箱和密码!"));
             }
         }
     }
@@ -62,22 +64,22 @@ class User extends BaseController {
             if (isset($postData["email"]) && isset($postData["password"]) && isset($postData["password_again"])) {
                 // 检查电子邮件格式是否合法
                 if (!preg_match("/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/", $postData["email"])) {
-                    return redirect()->to("/user/register?notify=error&message=电子邮件格式不正确！");
+                    return redirect()->to("/user/register?notify=error&message=" . urlencode("电子邮件格式不正确！"));
                 }
 
                 // 检查用户是否重复
                 if (self::_getUserInfo("email", $postData["email"])) {
-                    return redirect()->to("/user/register?notify=error&message=已存在同名用户，请使用密码重置功能！");
+                    return redirect()->to("/user/register?notify=error&message=" . urlencode("已存在同名用户，请使用密码重置功能！"));
                 }
 
                 // 检查两次密码是否一致
                 if ($postData["password"] !== $postData["password_again"]) {
-                    return redirect()->to("/user/register?notify=error&message=两次密码不一致！");
+                    return redirect()->to("/user/register?notify=error&message=" . urlencode("两次密码不一致！"));
                 }
 
                 // 检查密码强度
                 if (!self::_checkPasswordStrength($postData["password"])) {
-                    return redirect()->to("/user/register?notify=error&message=密码不满足强度要求！");
+                    return redirect()->to("/user/register?notify=error&message=" . urlencode("密码不满足强度要求！"));
                 }
 
                 // 新建用户
@@ -95,9 +97,9 @@ class User extends BaseController {
                     Options::updateOption($uid, $key, $val);
                 }
 
-                return redirect()->to("/user/login?notify=message&message=注册成功！");
+                return redirect()->to("/user/login?notify=message&message=" . urlencode("注册成功！"));
             } else {
-                return redirect()->to("/user/register?notify=error&message=请输入正确的信息!");
+                return redirect()->to("/user/register?notify=error&message=" . urlencode("请输入正确的信息!"));
             }
         }
     }
@@ -119,13 +121,13 @@ class User extends BaseController {
             if (isset($postData["email"])) {
                 // 检查电子邮件格式是否合法
                 if (!preg_match("/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/", $postData["email"])) {
-                    return redirect()->to("/user/reset?notify=error&message=电子邮件格式不正确！");
+                    return redirect()->to("/user/reset?notify=error&message=" . urlencode("电子邮件格式不正确！"));
                 }
 
                 // 检查用户是否存在
                 $userInfo = self::_getUserInfo("email", $postData["email"]);
                 if (!$userInfo) {
-                    return redirect()->to("/user/reset?notify=error&message=用户不存在！");
+                    return redirect()->to("/user/reset?notify=error&message=" . urlencode("用户不存在！"));
                 }
 
                 // 重置用户密码
@@ -134,10 +136,11 @@ class User extends BaseController {
                 self::_changeUserPassword($uid, $newPassword);
 
                 // 发送电子邮件
+                self::sendMail($userInfo["email"], "OPMLHub - 密码重置", "你的新密码为" . $newPassword . "。请使用该密码登录OPMLHub，并及时修改密码！");
 
-
+                return redirect()->to("/user/reset?notify=message&message=" . urlencode("邮件已发送，请查看邮件以获取重置后的新密码！"));
             } else {
-                return redirect()->to("/user/reset?notify=error&message=请输入正确的信息!");
+                return redirect()->to("/user/reset?notify=error&message=" . urlencode("请输入正确的信息!"));
             }
         }
     }
@@ -166,6 +169,17 @@ class User extends BaseController {
                     // page：订阅配置的子页面
                     switch ($getData["page"]) {
                         case "index":
+                            $uid = self::_getCurrentUserInfo()["id"];
+                            $opmlRssStatistic = Opml::_getOPMLRSSStatistic($uid);
+                            $opmlAccessStatistic = Opml::_getOPMLAccessHistory($uid);
+                            $loginHistory = $this->_getCurrentUserLoginHistory(true);
+
+                            $renderData["OPMLCount"] = $opmlRssStatistic["opml_count"];
+                            $renderData["RSSCount"] = $opmlRssStatistic["rss_count"];
+                            $renderData["LoginHistoryTop5"] = $loginHistory;
+                            $renderData["OPMLAccessCount"] = $opmlAccessStatistic["access_count"];
+                            $renderData["OPMLAccessHistory7Days"] = $opmlAccessStatistic["access_history"];
+
                             return view("user/home", $renderData);
                             break;
                         case "opml":
@@ -363,5 +377,38 @@ class User extends BaseController {
         ])->update([
             "login_history" =>      json_encode($loginHistory, JSON_UNESCAPED_UNICODE)
         ]);
+    }
+
+    private function _getCurrentUserLoginHistory($withLocation = false) {
+        $db = \Config\Database::connect();
+
+        $builder = $db->table("user");
+
+        $userInfo = self::_getCurrentUserInfo();
+
+        $userInfo = $builder->where("id", $userInfo["id"])->get()->getResult("array");
+
+        // 需要反转一下
+        $loginHistory = array_reverse(json_decode($userInfo[0]["login_history"], true));
+
+        if (count($loginHistory) !== 0) {
+            $returnData = [];
+
+            if ($withLocation) {
+                foreach ($loginHistory as $each) {
+                    if (count($returnData) < 5) {
+                        $returnData = array_merge($returnData, [[
+                            "login_time"    =>      $each["login_time"],
+                            "login_ip"      =>      $each["login_ip"],
+                            "login_location"=>      implode(" ", Ip::find($each["login_ip"]))
+                        ]]);
+                    }
+                }
+            }
+
+            return $returnData;
+        } else {
+            return [];
+        }
     }
 }
