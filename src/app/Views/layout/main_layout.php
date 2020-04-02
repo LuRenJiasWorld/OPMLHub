@@ -14,6 +14,22 @@
         }
     </style>
 
+    <script>
+        // 定义全局函数
+        function inUrlParameters(key, value) {
+            return window.location.search.substr(1).split("&").includes(key + "=" + value);
+        }
+
+        function getUrlParameter(key) {
+            var urlParamaters = window.location.search.substr(1).split("&");
+            for (var i = 0; i < key.length; i++) {
+                if (urlParamaters[i].startsWith(key + "=")) {
+                    return urlParamaters[i].split("=")[1];
+                }
+            }
+        }
+    </script>
+
     <?= $this->renderSection("header-style") ?>
 </head>
 <body>
