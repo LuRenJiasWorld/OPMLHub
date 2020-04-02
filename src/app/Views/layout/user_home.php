@@ -222,14 +222,28 @@
         var layer = layui.layer;
         var $ = layui.jquery;
 
-        function inUrlParameters(key, value) {
-            return window.location.search.substr(1).split("&").includes(key + "=" + value);
-        }
-
         $(window).ready(function () {
             if (inUrlParameters("module", "index"))    $("#tab-index").addClass("layui-this");
             if (inUrlParameters("module", "settings")) $("#tab-settings").addClass("layui-this");
             if (inUrlParameters("module", "password")) $("#tab-password").addClass("layui-this");
+
+            var isError   = inUrlParameters("notify", "error");
+            var isAlert   = inUrlParameters("notify", "alert");
+            var isMessage = inUrlParameters("notify", "message");
+
+            if (isError || isAlert || isMessage) {
+                var textColor = "";
+                var textName  = "";
+
+                if (isError)   { textColor = "#bb0b0b"; textName = "错误"; }
+                if (isAlert)   { textColor = "#ff8858"; textName = "警告"; }
+                if (isMessage) { textColor = "#009688"; textName = "提示"; }
+
+                layer.alert("<p style='color: " + textColor + ";'>" + decodeURI(getUrlParameter("message")) + "</p>", {
+                    offset: 'auto',
+                    title: textName
+                });
+            }
         });
 
         $(".opml-title span").click(function (event) {
