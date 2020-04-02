@@ -14,14 +14,14 @@ CREATE TABLE `opml` (
   `title` varchar(32) NOT NULL,
   `enabled` tinyint(1) DEFAULT '1',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='OPML数据表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='OPML数据表';
 
 CREATE TABLE `opml_access_history` (
   `id` int(11) NOT NULL,
   `opml_uuid` varchar(36) NOT NULL,
   `access_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `access_ip` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='OPML访问日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='OPML访问日志表';
 
 CREATE TABLE `options` (
   `id` int(11) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `options` (
   `option_val` text NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户设置表';
 
 CREATE TABLE `rss` (
   `uuid` varchar(36) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `rss` (
   `website_url` text,
   `enabled` tinyint(1) DEFAULT '1',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='RSS数据表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='RSS数据表';
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `user` (
   `login_history` text,
   `register_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_login_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户信息表';
 
 
 ALTER TABLE `opml`
