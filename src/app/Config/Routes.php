@@ -58,7 +58,7 @@ $routes->get("/opml/(:uuid)", "Opml::DisplayOPML/$1");
 
 // 更新/新增/删除OPML/RSS记录
 $routes->post("/opml/update", "Opml::Update");
-$routes->post("/opml/delete", "Opml::Delete");
+$routes->get("/opml/delete", "Opml::Delete");
 
 /**
  * --------------------------------------------------------------------
