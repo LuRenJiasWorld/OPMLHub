@@ -60,12 +60,13 @@
         display: inline-block;
         font-size: 18px;
         float: right;
-        transform: translateY(2px);
+        transform: translateY(1px);
         padding: 0 10px;
     }
 
     #sidebar .layui-nav .opml-title .layui-nav-more {
-        display: none;
+        right: 13px !important;
+
     }
 
     #sidebar #add-opml-category i {
@@ -93,13 +94,17 @@
         left: 260px !important;
     }
 
+    .layui-nav a.layui-this {
+        color: white!important;
+    }
+
     /* 鼠标悬浮样式美化 */
     .layui-nav-tree .layui-nav-item > a:hover, .layui-nav-tree .layui-nav-item dd:hover {
         background-color: #159688 !important;
     }
 
     .layui-nav-item i {
-        margin-right: 4px;
+        margin-right: 14px;
     }
 
     span.layui-nav-bar {
@@ -150,12 +155,13 @@
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree">
                 <?php foreach ($opml as $eachOPML):?>
-                    <li class="layui-nav-item layui-nav-itemed">
+                    <li class="layui-nav-item">
                         <a class="opml-title <?php if(isset($currentData) && $currentData["uuid"] == $eachOPML["opml"]["uuid"]) echo "layui-this"; ?>" title="<?= $eachOPML["opml"]["title"] ?>" href="javascript:;">
                             <i class="layui-icon layui-icon-template-1" style="margin-right: 10px; transform: translateY(-1px);"></i>
-                            <span data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>">
+                            <span class="opml-name" data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>">
                                 <?= $eachOPML["opml"]["title"] ?>
                             </span>
+                            <span class="layui-nav-more"></span>
                             <i class="layui-icon layui-icon-share" data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>"></i>
                         </a>
                         <dl class="layui-nav-child">
@@ -250,7 +256,7 @@
             $("#year").text((new Date).getFullYear());
         });
 
-        $(".opml-title span").click(function (event) {
+        $(".opml-title span.opml-name").click(function (event) {
             event.stopPropagation();
             location.href = "/user/home?module=index&page=opml&uuid=" + event.currentTarget.dataset.opmlUuid;
         });
