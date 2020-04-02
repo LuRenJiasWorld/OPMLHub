@@ -97,7 +97,7 @@
             <?= $PageTitle ?>
         </div>
         <div class="layui-card-body">
-            <?php if (isset($error)) { echo "<p style='color: red; text-align: center; font-size: 16px; margin-bottom: 30px;'>" . $error . "</p>"; } ?>
+            <p id="notify" style='text-align: center; font-size: 16px; margin-bottom: 20px; margin-top: -15px; display: none;'></p>
             <?= $this->renderSection("login_register_form") ?>
             <div id="footer">
                 <span>OPMLHub © 2020
@@ -116,9 +116,25 @@
 
 <?= $this->section("footer-script") ?>
 <script>
-    layui.use('form', function() {
+    layui.use(["form", "jquery"], function() {
         var form = layui.form;
+        var $ = layui.jquery;
 
+        $(window).ready(function () {
+            var notify = $("#notify");
+
+            var isError   = inUrlParameters("notify", "error");
+            var isAlert   = inUrlParameters("notify", "alert");
+            var isMessage = inUrlParameters("notify", "message");
+
+            if (isError || isAlert || isMessage) {
+                notify.show();
+                notify.text(decodeURI(getUrlParameter("message")));
+                if (isError)   notify.css("color", "#bb0b0b");
+                if (isAlert)   notify.css("color", "#ff8858");
+                if (isMessage) notify.css("color", "#009688");
+            }
+        })
     });
 </script>
 <?= $this->endSection() ?>
