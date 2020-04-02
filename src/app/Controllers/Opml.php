@@ -14,7 +14,6 @@ class Opml extends BaseController
             $opmlInfo = self::_getOPMLInfo($uuid);
             $userInfo = User::_getUserInfo("id", $opmlInfo["uid"]);
 
-
             $rssInfo = [];
 
             $allOPMLinfo = self::_getAllOPML($userInfo["id"]);
@@ -36,9 +35,14 @@ class Opml extends BaseController
 
             $renderData = [
                 "OpmlTitle"     =>       $opmlInfo["title"],
-                "UserEmail"     =>       $userInfo["email"],
                 "OpmlData"      =>       $enabledRssInfo
             ];
+
+            // 检查用户配置
+            $userOptions = Options::getOptionsFromUID($userInfo["id"]);
+
+            if ($userOptions["email_in_opml"]) $renderData["UserEmail"] = $userInfo["email"];
+            if ($userOptions["xml_header"])    $renderData["XMLHeader"] = true;
 
             return view("opml/opml", $renderData);
         } else {
@@ -145,7 +149,7 @@ class Opml extends BaseController
 
     // 根据UID获取用户所有（已启用）的OPML和RSS信息
     // 按照拼音排序
-    public static function _getAllOPML($uid) {
+    public static function _getAllOPML($uid, $orderOPMLByPinyin = false, $orderRSSByPinyin = false) {
         $db = \Config\Database::connect();
 
         $builder = $db->table("opml");
@@ -166,7 +170,7 @@ class Opml extends BaseController
             $query = $builder->where([
                 "opml_uuid"     =>      $eachOPML["uuid"],
                 "enabled"       =>      true
-            ])->get();
+            ])->orderBy("update_time", "desc")->get();
 
 
             $rssList = $query->getResult("array");
@@ -175,37 +179,44 @@ class Opml extends BaseController
             $resultList = array_merge($resultList, [$tempList]);
         }
 
-        // ------开始排序------
-        $pinyin = new Pinyin();
+        if ($orderOPMLByPinyin || $orderRSSByPinyin) {
+            // ------开始排序------
+            $pinyin = new Pinyin();
 
-        // 1. 获取OPML名称的拼音
-        foreach ($resultList as &$eachResult) {
-            $eachResult["opml"]["pinyin"] = implode($pinyin->convert($eachResult["opml"]["title"], PINYIN_KEEP_NUMBER | PINYIN_KEEP_ENGLISH | PINYIN_KEEP_PUNCTUATION));
-            // 2. 获取RSS名称的拼音
-            foreach ($eachResult["rss"] as &$eachRssResult) {
-                $eachRssResult["pinyin"] = implode($pinyin->convert($eachRssResult["feed_name"], PINYIN_KEEP_NUMBER | PINYIN_KEEP_ENGLISH | PINYIN_KEEP_PUNCTUATION));
+            // 1. 获取OPML名称的拼音
+            foreach ($resultList as &$eachResult) {
+                $eachResult["opml"]["pinyin"] = implode($pinyin->convert($eachResult["opml"]["title"], PINYIN_KEEP_NUMBER | PINYIN_KEEP_ENGLISH | PINYIN_KEEP_PUNCTUATION));
+                // 2. 获取RSS名称的拼音
+                foreach ($eachResult["rss"] as &$eachRssResult) {
+                    $eachRssResult["pinyin"] = implode($pinyin->convert($eachRssResult["feed_name"], PINYIN_KEEP_NUMBER | PINYIN_KEEP_ENGLISH | PINYIN_KEEP_PUNCTUATION));
+                }
             }
-        }
-        unset($eachResult);
-        unset($eachRssResult);
+            unset($eachResult);
+            unset($eachRssResult);
 
-        // 3. 对OPML进行排序
-        $tempList = [];
+            // 3. 对OPML进行排序
+            if ($orderOPMLByPinyin) {
+                $tempList = [];
 
-        foreach ($resultList as $eachResult) {
-            $tempList = array_merge($tempList, [strtolower($eachResult["opml"]["pinyin"])]);
-        }
-        array_multisort($tempList, SORT_ASC, $resultList);
-
-        // 4. 对RSS进行排序
-        foreach ($resultList as &$eachResult) {
-            $tempList = [];
-            foreach ($eachResult["rss"] as $eachRssResult) {
-                $tempList = array_merge($tempList, [strtolower($eachRssResult["pinyin"])]);
+                foreach ($resultList as $eachResult) {
+                    $tempList = array_merge($tempList, [strtolower($eachResult["opml"]["pinyin"])]);
+                }
+                array_multisort($tempList, SORT_ASC, $resultList);
             }
-            array_multisort($tempList, SORT_ASC, $eachResult["rss"]);
+
+            // 4. 对RSS进行排序
+            if ($orderRSSByPinyin) {
+                foreach ($resultList as &$eachResult) {
+                    $tempList = [];
+                    foreach ($eachResult["rss"] as $eachRssResult) {
+                        $tempList = array_merge($tempList, [strtolower($eachRssResult["pinyin"])]);
+                    }
+                    array_multisort($tempList, SORT_ASC, $eachResult["rss"]);
+                }
+            }
+
+            // ------结束排序------
         }
-        // ------结束排序------
 
         return $resultList;
     }
