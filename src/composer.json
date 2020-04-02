@@ -9,7 +9,8 @@
 		"codeigniter4/framework": "^4",
 		"ramsey/uuid": "^4.0",
 		"overtrue/pinyin": "~4.0",
-		"phpmailer/phpmailer": "^6.1"
+		"phpmailer/phpmailer": "^6.1",
+		"zhuzhichao/ip-location-zh": "^2.4"
 	},
 	"require-dev": {
 		"mikey179/vfsstream": "1.6.*",
@@ -30,5 +31,11 @@
 		"forum": "http://forum.codeigniter.com/",
 		"source": "https://github.com/codeigniter4/CodeIgniter4",
 		"slack": "https://codeigniterchat.slack.com"
+	},
+	"repositories": {
+		"packagist": {
+			"type": "composer",
+			"url": "https://packagist.jp"
+		}
 	}
 }
