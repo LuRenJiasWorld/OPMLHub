@@ -48,7 +48,7 @@
 
     #sidebar .layui-nav .opml-title {
         display: flex;
-        padding-right: 12px;
+        padding-right: 0;
         padding-left: 8px;
     }
 
@@ -64,9 +64,14 @@
         padding: 0 10px;
     }
 
+    #sidebar .layui-nav .more-button {
+        display: block;
+        height: 45px;
+        width: 34px;
+    }
+
     #sidebar .layui-nav .opml-title .layui-nav-more {
         right: 13px !important;
-
     }
 
     #sidebar #add-opml-category i {
@@ -101,10 +106,6 @@
     /* 鼠标悬浮样式美化 */
     .layui-nav-tree .layui-nav-item > a:hover, .layui-nav-tree .layui-nav-item dd:hover {
         background-color: #159688 !important;
-    }
-
-    .layui-nav-item i {
-        margin-right: 14px;
     }
 
     span.layui-nav-bar {
@@ -161,8 +162,8 @@
                             <span class="opml-name" data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>">
                                 <?= $eachOPML["opml"]["title"] ?>
                             </span>
-                            <span class="layui-nav-more"></span>
                             <i class="layui-icon layui-icon-share" data-opml-uuid="<?= $eachOPML["opml"]["uuid"] ?>"></i>
+                            <div class="more-button"></div>
                         </a>
                         <dl class="layui-nav-child">
                             <?php foreach ($eachOPML["rss"] as $eachRSS):?>
@@ -254,11 +255,62 @@
             }
 
             $("#year").text((new Date).getFullYear());
+
+            // 根据localStorage结果自动判断左侧OPML的折叠情况
+            var list = JSON.parse(localStorage.getItem("item-unwrap-list"));
+            var opmlList = $("#sidebar .layui-nav-item .opml-name");
+            console.log(list);
+            console.log(opmlList);
+
+            if (list) {
+                for (var i = 0; i < opmlList.length; i++) {
+                    for (var j = 0; j < list.length; j++) {
+                        if (opmlList[i].dataset.opmlUuid === list[j]) {
+                            $(opmlList[i]).parent().parent().addClass("layui-nav-itemed");
+                        }
+                    }
+                }
+            }
         });
 
         $(".opml-title span.opml-name").click(function (event) {
             event.stopPropagation();
             location.href = "/user/home?module=index&page=opml&uuid=" + event.currentTarget.dataset.opmlUuid;
+        });
+
+        $(".opml-title span.layui-nav-more").click(function (event) {
+            event.stopPropagation();
+
+            $(event.currentTarget).prev().trigger("click");
+        });
+
+        $(".opml-title .more-button").click(function (event) {
+            event.stopPropagation();
+
+            var list = JSON.parse(localStorage.getItem("item-unwrap-list"));
+            var currentUuid = $(event.currentTarget).prev()[0].dataset.opmlUuid;
+
+            if (list) {
+                for (var i = 0; i < list.length; i++) {
+                    // 存在的情况，说明需要去除
+                    if (list[i] === currentUuid) {
+                        console.log("remove");
+                        list.splice(i, 1);
+                        localStorage.setItem("item-unwrap-list", JSON.stringify(list));
+                        $(".opml-name[data-opml-uuid='" + currentUuid + "']").parent().parent().removeClass("layui-nav-itemed");
+                        return;
+                    }
+                }
+
+                // 不存在的情况，说明需要添加
+                console.log("add");
+                list = list.concat(currentUuid);
+                $(".opml-name[data-opml-uuid='" + currentUuid + "']").parent().parent().addClass("layui-nav-itemed");
+                localStorage.setItem("item-unwrap-list", JSON.stringify(list));
+            } else {
+                $(".opml-name[data-opml-uuid='" + currentUuid + "']").parent().parent().addClass("layui-nav-itemed");
+                localStorage.setItem("item-unwrap-list", JSON.stringify([currentUuid]))
+            }
         });
 
         $(".opml-title i").click(function (event) {
