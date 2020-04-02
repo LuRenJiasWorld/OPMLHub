@@ -3,6 +3,8 @@
 class Config extends BaseController {
     public static $APP_ContactEmail = "";
 
+    public static $SMTP_Host = "";
+    public static $SMTP_Port = "";
     public static $SMTP_Encryption = "";
     public static $SMTP_User = "";
     public static $SMTP_Pass = "";
@@ -13,4 +15,5 @@ class Config extends BaseController {
     public static $DB_User = "";
     public static $DB_Pass = "";
     public static $DB_Database = "";
+
 }
