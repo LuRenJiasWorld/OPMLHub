@@ -2,17 +2,17 @@
 
 <?= $this->section("login_register_form") ?>
 
-<form class="layui-form" action="">
+<form class="layui-form" action="/user/reset" method="post">
     <div class="layui-form-item form-input">
         <label class="layui-form-label login">邮箱</label>
         <div class="layui-input-block login">
-            <input type="email" name="email" required  lay-verify="required" placeholder="请输入电子邮箱地址" class="layui-input">
+            <input type="email" name="email" required lay-verify="required" placeholder="请输入电子邮箱地址" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block button-center">
-            <button type="reset" class="layui-btn layui-btn-fluid">重置</button>
+            <button type="submit" class="layui-btn layui-btn-fluid">重置</button>
         </div>
     </div>
 
