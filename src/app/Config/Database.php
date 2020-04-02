@@ -1,5 +1,7 @@
 <?php namespace Config;
 
+use App\Controllers\Config;
+
 /**
  * Database Configuration
  *
@@ -31,10 +33,10 @@ class Database extends \CodeIgniter\Database\Config
 	 */
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => 'root',
-		'database' => 'opmlhub',
+		'hostname' => '',
+		'username' => '',
+		'password' => '',
+		'database' => '',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -84,6 +86,12 @@ class Database extends \CodeIgniter\Database\Config
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->default["hostname"] = Config::$DB_Host;
+		$this->default["port"]     = Config::$DB_Port;
+		$this->default["username"] = Config::$DB_User;
+		$this->default["password"] = Config::$DB_Pass;
+		$this->default["database"] = Config::$DB_Database;
 
 		// Ensure that we always set the database group to 'tests' if
 		// we are currently running an automated test suite, so that
