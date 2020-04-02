@@ -26,12 +26,18 @@
         color: white;
     }
 
+    #header .layui-nav-item i {
+        margin-right: 5px;
+    }
+
     #sidebar dl.layui-nav-child dd {
         display: flex;
     }
 
     #sidebar dl.layui-nav-child dd .rss-list-item {
         flex: 1;
+        padding-left: 26px;
+        padding-right: 0;
     }
 
     #sidebar dl.layui-nav-child dd .rss-list-item i, #sidebar dl.layui-nav-child dd .add-rss i {
@@ -44,6 +50,7 @@
 
     #sidebar dl.layui-nav-child dd .add-rss {
         width: 100%;
+        padding-left: 26px;
     }
 
     #sidebar .layui-nav .opml-title {
