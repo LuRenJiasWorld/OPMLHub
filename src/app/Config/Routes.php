@@ -42,8 +42,15 @@ $routes->get("/user/logout", "User::Logout");
 $routes->get("/user/register", "User::Register");
 $routes->post("/user/register", "User::Register");
 
+// 重置
+$routes->get("/user/reset", "User::Reset");
+$routes->post("/user/reset", "User::Reset");
+
 // 用户后台
 $routes->get("/user/home", "User::Home");
+
+// 更新用户数据
+$routes->post("/user/update", "User::Update");
 
 // 渲染OPML数据
 $routes->addPlaceholder("uuid", "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
