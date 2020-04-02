@@ -358,7 +358,11 @@ class Opml extends BaseController
         $db = \Config\Database::connect();
         $builder = $db->table("opml_access_history");
 
-        $result = $builder->whereIn("opml_uuid", $uuidList)->orderBy("access_time", "asc")->get()->getResult("array");
+        if (count($uuidList) !== 0) {
+            $result = $builder->whereIn("opml_uuid", $uuidList)->orderBy("access_time", "asc")->get()->getResult("array");
+        } else {
+            $result = [];
+        }
 
         // 计数
         if (count($result) !== 0) {
