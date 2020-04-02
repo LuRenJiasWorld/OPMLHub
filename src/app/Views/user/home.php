@@ -120,11 +120,21 @@
             datasets: [
                 {
                     data: [<?php foreach($OPMLAccessHistory7Days as $EachDay) echo $EachDay . ","; ?>],
-                    label: "123"
+                    label: "请求次数",
+                    borderColor: "#00968880",
+                    backgroundColor: "#00968840"
                 }
             ]
         },
-        config: []
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min: 0
+                    }
+                }]
+            }
+        }
     });
 </script>
 <?= $this->endSection() ?>
