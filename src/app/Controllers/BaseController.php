@@ -1,6 +1,11 @@
 <?php
 namespace App\Controllers;
 
+use Config\Services;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 /**
  * Class BaseController
  *
@@ -31,7 +36,6 @@ class BaseController extends Controller
 	protected $helpers = [];
 
 	function __construct() {
-        // 检查登录状态
     }
 
     /**
@@ -41,12 +45,6 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-
-		//--------------------------------------------------------------------
-		// Preload any models, libraries, etc, here.
-		//--------------------------------------------------------------------
-		// E.g.:
-		// $this->session = \Config\Services::session();
 	}
 
 	protected function loginChecker() {
@@ -59,4 +57,40 @@ class BaseController extends Controller
 	    return md5($password . PASSWORD_SALT);
     }
 
+    protected function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    protected function sendMail($to, $subject, $message) {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = Config::$SMTP_Host;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = Config::$SMTP_User;
+            $mail->Password   = Config::$SMTP_Pass;
+            $mail->SMTPSecure = Config::$SMTP_Encryption == "tls" ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = Config::$SMTP_Port;
+
+            $mail->setFrom(Config::$SMTP_User, Config::$SMTP_Name);
+            $mail->addAddress($to);
+
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+
+            $mail->send();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
