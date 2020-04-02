@@ -16,7 +16,9 @@ class Opml extends BaseController
 
             $rssInfo = [];
 
-            $allOPMLinfo = self::_getAllOPML($userInfo["id"]);
+            $userOptions = Options::getOptionsFromUID($userInfo["id"]);
+
+            $allOPMLinfo = self::_getAllOPML($userInfo["id"], $userOptions["opml_order_pinyin"], $userOptions["rss_order_pinyin"]);
 
             foreach ($allOPMLinfo as $eachOPML) {
                 if ($eachOPML["opml"]["uuid"] == $uuid) {
@@ -39,8 +41,6 @@ class Opml extends BaseController
             ];
 
             // 检查用户配置
-            $userOptions = Options::getOptionsFromUID($userInfo["id"]);
-
             if ($userOptions["email_in_opml"]) $renderData["UserEmail"] = $userInfo["email"];
             if ($userOptions["xml_header"])    $renderData["XMLHeader"] = true;
 
