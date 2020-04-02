@@ -142,6 +142,8 @@
         vertical-align: sub;
         margin-right: 8px;
     }
+
+    #sidebar .layui-side-scroll::-webkit-scrollbar { width: 0 !important }
 </style>
 <?= $this->endSection() ?>
 
