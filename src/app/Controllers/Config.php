@@ -1,6 +1,22 @@
 <?php namespace App\Controllers;
 
 class Config extends BaseController {
+    function __construct() {
+        parent::__construct();
+
+        $configList = [
+            "APP_ContactEmail",
+            "SMTP_Host", "SMTP_Port", "SMTP_User", "SMTP_Pass", "SMTP_Name",
+            "DB_Host", "DB_Port", "DB_User", "DB_Pass", "DB_Database",
+            "SiteURL", "GatewayIP"
+        ];
+        foreach ($configList as $each) {
+            if (isEmpty(Config::$$each) && !isEmpty(getenv($each))) {
+                Config::$$each = getenv($each);
+            }
+        }
+    }
+
     public static $APP_ContactEmail = "";
 
     public static $SMTP_Host = "";
