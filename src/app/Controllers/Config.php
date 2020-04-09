@@ -33,5 +33,5 @@ class Config extends BaseController {
     public static $DB_Database = "";
 
     public static $SiteURL = "";
-    public static $GatewayIP = [];
+    public static $GatewayIP = "";
 }
