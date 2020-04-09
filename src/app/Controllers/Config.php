@@ -11,7 +11,7 @@ class Config extends BaseController {
             "DB_Host", "DB_Port", "DB_User", "DB_Pass", "DB_Database"
         ];
         foreach ($configList as $each) {
-            if (isEmpty(Config::$$each) && !isEmpty(getenv($each))) {
+            if (empty(Config::$$each) && !empty(getenv($each))) {
                 Config::$$each = getenv($each);
             }
         }
