@@ -8,8 +8,8 @@ class App extends BaseConfig
 
     // 读取应用配置
     function __construct() {
-        $this->baseURL = Config::$SiteURL;
-        $this->proxyIPs = Config::$GatewayIP;
+        $this->baseURL = isEmpty(Config::$SiteURL)    ? $_ENV["SiteURL"]   : Config::$SiteURL;
+        $this->proxyIPs = isEmpty(Config::$GatewayIP) ? $_ENV["GatewayIP"] : Config::$GatewayIP;
     }
 
     /*

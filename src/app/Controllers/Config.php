@@ -4,11 +4,11 @@ class Config extends BaseController {
     function __construct() {
         parent::__construct();
 
+        // SiteURL和GatewayIP初始化需要参考Config/App.php的构造函数
         $configList = [
             "APP_ContactEmail",
             "SMTP_Host", "SMTP_Port", "SMTP_Encryption", "SMTP_User", "SMTP_Pass", "SMTP_Name",
-            "DB_Host", "DB_Port", "DB_User", "DB_Pass", "DB_Database",
-            "SiteURL", "GatewayIP"
+            "DB_Host", "DB_Port", "DB_User", "DB_Pass", "DB_Database"
         ];
         foreach ($configList as $each) {
             if (isEmpty(Config::$$each) && !isEmpty(getenv($each))) {
