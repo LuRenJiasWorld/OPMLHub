@@ -6,7 +6,7 @@ class Config extends BaseController {
 
         $configList = [
             "APP_ContactEmail",
-            "SMTP_Host", "SMTP_Port", "SMTP_User", "SMTP_Pass", "SMTP_Name",
+            "SMTP_Host", "SMTP_Port", "SMTP_Encryption", "SMTP_User", "SMTP_Pass", "SMTP_Name",
             "DB_Host", "DB_Port", "DB_User", "DB_Pass", "DB_Database",
             "SiteURL", "GatewayIP"
         ];
