@@ -51,7 +51,7 @@ class Opml extends BaseController
 
             return view("opml/opml", $renderData);
         } else {
-            return redirect()->to("/user/login");
+            return view("errors/html/error_404");
         }
     }
 
@@ -231,7 +231,8 @@ class Opml extends BaseController
 
         $builder = $db->table("opml");
         $query = $builder->where([
-            "uuid"      =>      $uuid
+            "uuid"      =>      $uuid,
+            "enabled"   =>      true
         ])->limit(1)->get();
 
         $opmlInfo = $query->getResult("array");
