@@ -26,7 +26,7 @@
    | $DB_User          | 数据库用户                                                   | 是   |
    | $DB_Pass          | 数据库密码                                                   | 是   |
    | $DB_Database      | 数据库名称                                                   | 是   |
-   | $SiteURL          | 站点URL，格式需要为http://example.com，如果端口非80或443需要额外指定，不配置无法正常启动！ | 是   |
+   | $SiteURL          | 站点URL，格式需要为`http://example.com`，如果端口非80或443需要额外指定，不配置无法正常启动！ | 是   |
    | $GatewayIP        | 网关服务器IP，用于在反向代理情况下正常识别用户IP             | 是   |
 
 5. 上传`sql/init.sql`到你的数据库中
