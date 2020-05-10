@@ -14,24 +14,26 @@
 
 ## 使用截图
 
+> 点击即可放大
+
 <details>
   <summary>登录/注册页面</summary>
-  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_login.png" width="600" />
+  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_login.png" width="800" />
 </details>
 
 <details>
   <summary>首页</summary>
-  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_homepage.png" width="600" />
+  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_homepage.png" width="800" />
 </details>
 
 <details>
   <summary>RSS编辑页面</summary>
-    <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_rss_edit.png" width="600" />
+    <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_rss_edit.png" width="800" />
 </details>
 
 <details>
   <summary>设置页面</summary>
-      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_settings.png" width="600" />
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_settings.png" width="800" />
 </details>
 
 ## 功能
@@ -76,12 +78,12 @@ UI：[sentsin/LayUI](https://github.com/sentsin/layui)
 
 <details>
   <summary>支付宝/Alipay</summary>
-      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_alipay.png" width="600" />
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_alipay.png" width="200" />
 </details>
 
 <details>
   <summary>微信/Wechat</summary>
-      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_wechat.png" width="600" />
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_wechat.png" width="200" />
 </details>
 
 <details>
