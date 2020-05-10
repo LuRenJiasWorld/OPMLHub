@@ -14,17 +14,25 @@
 
 ## 使用截图
 
-### 登录/注册页面
-![snapshot_login](images/snapshot_login.png)
+<details>
+  <summary>登录/注册页面</summary>
+  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_login.png" width="600" />
+</details>
 
-### 首页
-![snapshot_homepage](images/snapshot_homepage.png)
+<details>
+  <summary>首页</summary>
+  <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_homepage.png" width="600" />
+</details>
 
-### RSS编辑页面
-![snapshot_rss_edit](images/snapshot_rss_edit.png)
+<details>
+  <summary>RSS编辑页面</summary>
+    <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_rss_edit.png" width="600" />
+</details>
 
-### 设置页面
-![snapshot_settings](images/snapshot_settings.png)
+<details>
+  <summary>设置页面</summary>
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/snapshot_settings.png" width="600" />
+</details>
 
 ## 功能
 
@@ -66,11 +74,20 @@ UI：[sentsin/LayUI](https://github.com/sentsin/layui)
 
 如果你觉得本项目对你有帮助，请你考虑赞助本项目！
 
-![donate_alipay](images/donate_alipay.png)
+<details>
+  <summary>支付宝/Alipay</summary>
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_alipay.png" width="600" />
+</details>
 
-![donate_wechat](images/donate_wechat.png)
+<details>
+  <summary>微信/Wechat</summary>
+      <img src="https://raw.githubusercontent.com/LuRenJiasWorld/OPMLHub/master/images/donate_wechat.png" width="600" />
+</details>
 
-[PayPal](https://www.paypal.me/lurenjia)
+<details>
+  <summary>贝宝/Paypal</summary>
+  <a href="https://www.paypal.me/lurenjia" target="_blank">https://www.paypal.me/lurenjia</a>
+</details>
 
 ## LICENSE
 
